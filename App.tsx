@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { CitationCard } from './components/CitationCard';
-import { PricingModal } from './components/PricingModal';
-import { searchCitations, sendChatMessage } from './services/geminiService';
+import { CitationCard } from './CitationCard';
+import { PricingModal } from './PricingModal';
+import { searchCitations, sendChatMessage } from './geminiService';
 import { SearchResult, UserStats, ChatMessage } from './types';
-import { generateRIS, generateBibTeX } from './utils/exportFormatter';
+import { generateRIS, generateBibTeX } from './exportFormatter';
 
 const App: React.FC = () => {
   const [query, setQuery] = useState('');
