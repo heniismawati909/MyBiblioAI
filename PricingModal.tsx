@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { PaymentMethod } from '../types.ts"
+import { PaymentMethod } from '../types.ts'
 
 interface PricingModalProps {
   isOpen: boolean;
