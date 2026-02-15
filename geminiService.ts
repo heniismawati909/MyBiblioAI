@@ -80,8 +80,9 @@ export const searchCitations = async (
 };
 
 export const sendChatMessage = async (history: ChatMessage[], message: string): Promise<string> => {
+  console.log("Chat history:", history);
   const chat = ai.chats.create({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-2.5-flash',
     config: {
       systemInstruction: "Anda adalah BiblioBot, asisten riset yang ramah. Bantu pengguna menjawab pertanyaan seputar referensi, cara sitasi, dan topik akademik lainnya secara singkat dan akurat."
     }
