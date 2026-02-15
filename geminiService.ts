@@ -19,8 +19,8 @@ export const searchCitations = async (
   }
 
   const modelName = isDeepResearch ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
-  const config: any = {
-    responseMimeType: "application/json",
+  const config: any = {}
+   /* responseMimeType: "application/json",
     responseSchema: {
       type: Type.OBJECT,
       properties: {
@@ -47,13 +47,15 @@ export const searchCitations = async (
       },
       required: ["query", "synthesis", "citations"]
     }
-  };
+  };*/
 
-  if (isDeepResearch) {
+  /* if (isDeepResearch) {
     config.thinkingConfig = { thinkingBudget: 32768 };
   } else {
     config.tools = [{ googleSearch: {} }];
-  }
+  } */
+
+  // if (isDeepResearch) { ... } else { ... }   // comment atau hapus sementara
 
   const response = await ai.models.generateContent({
     model: modelName,
