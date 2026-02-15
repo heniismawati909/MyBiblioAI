@@ -18,7 +18,7 @@ export const searchCitations = async (
     yearInstruction = `Utamakan referensi 10 tahun terakhir (${currentYear - 10}-${currentYear}).`;
   }
 
-  const modelName = isDeepResearch ? 'gemini-1.5-pro-latest' : 'gemini-1.5-flash-latest';
+  const modelName = isDeepResearch ? 'gemini-2.5-pro-latest' : 'gemini-2.5-flash-latest';
   const config: any = {
     responseMimeType: "application/json",
     responseSchema: {
