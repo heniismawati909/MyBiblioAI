@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { SearchResult, ChatMessage } from "../types";
+import { SearchResult, ChatMessage } from "./types";
 
 const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' });
 
@@ -19,8 +19,8 @@ export const searchCitations = async (
   }
 
   const modelName = isDeepResearch ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
-  const config: any = {}
-   /* responseMimeType: "application/json",
+  const config: any = {
+    responseMimeType: "application/json",
     responseSchema: {
       type: Type.OBJECT,
       properties: {
@@ -31,12 +31,12 @@ export const searchCitations = async (
           items: {
             type: Type.OBJECT,
             properties: {
-              id: { type: Type.STRING, description: "Nomor urut sitasi, misal '1', '2'" },
+              id: { type: Type.NUMBER },
               title: { type: Type.STRING },
               authors: { type: Type.ARRAY, items: { type: Type.STRING } },
-              year: { type: Type.STRING },
+              year: { type: Type.NUMBER },
               publisher: { type: Type.STRING },
-              page: { type: Type.STRING },
+              page: { type: Type.NUMBER },
               snippet: { type: Type.STRING },
               sourceUrl: { type: Type.STRING },
               imageUrl: { type: Type.STRING }
@@ -47,13 +47,7 @@ export const searchCitations = async (
       },
       required: ["query", "synthesis", "citations"]
     }
-  };*/
-
-  /* if (isDeepResearch) {
-    config.thinkingConfig = { thinkingBudget: 32768 };
-  } else {
-    config.tools = [{ googleSearch: {} }];
-  } */
+  };
 
   // if (isDeepResearch) { ... } else { ... }   // comment atau hapus sementara
 
@@ -68,6 +62,8 @@ export const searchCitations = async (
     4. Berikan 3-5 buku/ebook asli yang benar-benar ada di database atau web.`,
     config
   });
+  console.log("Raw response:", response.text) 
+
 
   try {
     const data = JSON.parse(response.text || '{}') as SearchResult;
@@ -84,10 +80,37 @@ export const searchCitations = async (
 };
 
 export const sendChatMessage = async (history: ChatMessage[], message: string): Promise<string> => {
+  console.log("Chat history:", history);
   const chat = ai.chats.create({
-    model: 'gemini-3-pro-preview',
+    model: 'gemini-2.5-flash',
     config: {
-      systemInstruction: "Anda adalah BiblioBot, asisten riset yang ramah. Bantu pengguna menjawab pertanyaan seputar referensi, cara sitasi, dan topik akademik lainnya secara singkat dan akurat."
+  systemInstruction : `Anda adalah BiblioBot, asisten riset yang ramah. 
+
+TUGAS UTAMA:
+- Bantu pengguna dengan pertanyaan seputar referensi
+- Jelaskan cara sitasi yang benar
+- Jawab topik akademik dengan singkat dan akurat
+
+FORMATTING RULES - WAJIB IKUTI:
+1. **Bold untuk judul utama** - gunakan **text**
+2. ### Headers untuk section - gunakan ### text
+3. Bullet points untuk list - gunakan - text
+4. *Italic untuk penekanan* - gunakan *text*
+5. Numbered list untuk urutan - gunakan 1. 2. 3.
+6. Code blocks untuk contoh - gunakan \`\`\`text\`\`\`
+7. Links dalam format [text](url)
+
+CONTOH FORMAT RESPONS:
+### Judul Topik
+Paragraf penjelasan singkat di sini.
+
+**Poin Penting:**
+- Item 1
+- Item 2
+- Item 3
+
+Selalu respond dengan Markdown yang rapi dan terstruktur.`
+      
     }
   });
 

@@ -1,5 +1,5 @@
 
-import { Citation } from '../types';
+import { Citation } from './types';
 
 export const generateRIS = (citations: Citation[]): string => {
   return citations.map(c => {
