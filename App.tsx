@@ -5,6 +5,7 @@ import { PricingModal } from './PricingModal';
 import { searchCitations, sendChatMessage } from './geminiService';
 import { SearchResult, UserStats, ChatMessage } from './types';
 import { generateRIS, generateBibTeX } from './exportFormatter';
+import ReactMarkdown from 'react-markdown';
 
 const App: React.FC = () => {
   const [query, setQuery] = useState('');
@@ -284,6 +285,23 @@ const App: React.FC = () => {
               {chatMessages.map((m, i) => (
                 <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-xs ${m.role === 'user' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-900 dark:text-slate-100 shadow-sm border border-slate-200 dark:border-slate-800'}`}>
+                    <div className="chat-message ai-message">
+                      <ReactMarkdown
+                        components={{
+                          h3: ({ node, ...props }) => <h3 className="text-lg font-bold mt-3 mb-2" {...props} />,
+                          strong: ({ node, ...props }) => <strong className="font-bold text-blue-600" {...props} />,
+                          em: ({ node, ...props }) => <em className="italic text-gray-600" {...props} />,
+                          ul: ({ node, ...props }) => <ul className="list-disc list-inside ml-4 my-2" {...props} />,
+                          ol: ({ node, ...props }) => <ol className="list-decimal list-inside ml-4 my-2" {...props} />,
+                          li: ({ node, ...props }) => <li className="my-1" {...props} />,
+                          a: ({ node, ...props }) => <a className="text-blue-500 underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                          code: ({ node, ...props }) => <code className="bg-black-200 px-2 py-1 rounded font-mono text-sm" {...props} />,
+                          pre: ({ node, ...props }) => <pre className="bg-gray-800 text-white p-3 rounded my-2 overflow-x-auto" {...props} />
+                        }}
+                      >
+                        {m.text}
+                      </ReactMarkdown>
+                    </div>
                     {m.text}
                   </div>
                 </div>
