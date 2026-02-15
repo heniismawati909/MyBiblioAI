@@ -1,4 +1,4 @@
-
+import './index.css'   // atau '../src/index.css' kalau file utama di root
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
