@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Citation } from '../types';
+import { Citation } from './types';
 
 interface CitationCardProps {
   citation: Citation;
@@ -10,8 +10,8 @@ export const CitationCard: React.FC<CitationCardProps> = ({ citation }) => {
   return (
     <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:shadow-md dark:hover:shadow-indigo-500/10 flex flex-col sm:flex-row">
       <div className="w-full sm:w-32 h-48 sm:h-auto bg-slate-100 dark:bg-slate-800 flex-shrink-0 relative overflow-hidden group border-b sm:border-b-0 sm:border-r border-slate-200 dark:border-slate-800">
-        <img 
-          src={citation.imageUrl} 
+        <img
+          src={citation.imageUrl}
           alt={citation.title}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           loading="lazy"
@@ -37,16 +37,16 @@ export const CitationCard: React.FC<CitationCardProps> = ({ citation }) => {
         <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
           {citation.authors.join(', ')} ({citation.year}) • {citation.publisher}
         </p>
-        
+
         <div className="bg-slate-50 dark:bg-slate-950 rounded-lg p-3 border-l-2 border-indigo-500 mb-3">
           <p className="text-xs text-slate-600 dark:text-slate-300 italic leading-relaxed">
             "{citation.snippet}"
           </p>
         </div>
 
-        <a 
-          href={citation.sourceUrl} 
-          target="_blank" 
+        <a
+          href={citation.sourceUrl}
+          target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors uppercase tracking-wider"
         >

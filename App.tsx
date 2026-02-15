@@ -51,6 +51,7 @@ const App: React.FC = () => {
   const isLimitReached = !userStats.isPremium && userStats.searchCount >= TRIAL_LIMIT;
 
   const handleSearch = async (e: React.FormEvent) => {
+    //MASOK
     e.preventDefault();
     if (!query.trim()) return;
     if (isLimitReached) {
@@ -65,7 +66,9 @@ const App: React.FC = () => {
       const data = await searchCitations(query, yearFilter, isDeepResearch);
       setResult(data);
       setUserStats(prev => ({ ...prev, searchCount: prev.searchCount + 1 }));
+      console.log("STARTING SEARCH with params:", { query, yearFilter, isDeepResearch });
     } catch (err: any) {
+      console.error("Search error:", err);
       setError(err.message || 'Terjadi kesalahan riset.');
     } finally {
       setIsLoading(false);
@@ -73,6 +76,7 @@ const App: React.FC = () => {
   };
 
   const handleChatSend = async (e: React.FormEvent) => {
+    console.log('handleChatSend called');
     e.preventDefault();
     if (!chatInput.trim()) return;
 
@@ -104,7 +108,7 @@ const App: React.FC = () => {
       content = generateBibTeX(result.citations);
       mimeType = 'application/x-bibtex';
     } else {
-      content = `HASIL BIBLIOAI: ${query}\n\n${result.synthesis}\n\nDAFTAR PUSTAKA:\n` + 
+      content = `HASIL BIBLIOAI: ${query}\n\n${result.synthesis}\n\nDAFTAR PUSTAKA:\n` +
         result.citations.map(c => `${c.id}. ${c.authors.join(', ')} (${c.year}). ${c.title}`).join('\n');
     }
 
@@ -129,20 +133,20 @@ const App: React.FC = () => {
             </div>
             <span className="text-xl font-bold tracking-tight">Biblio<span className="text-indigo-600 dark:text-indigo-400">AI</span></span>
           </div>
-          
+
           <div className="flex items-center gap-4">
             {!userStats.isPremium && (
               <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-slate-100 dark:bg-slate-900 rounded-full text-[10px] font-bold text-slate-500 uppercase">
                 Trial: <span className={userStats.searchCount >= TRIAL_LIMIT ? 'text-red-500' : 'text-indigo-600'}>{userStats.searchCount}/{TRIAL_LIMIT}</span>
               </div>
             )}
-            <button 
+            <button
               onClick={() => setIsDarkMode(!isDarkMode)}
               className="p-2 rounded-xl bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-all"
             >
               {isDarkMode ? <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" /></svg> : <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" /></svg>}
             </button>
-            <button 
+            <button
               onClick={() => setIsPricingModalOpen(true)}
               className={`text-[11px] font-bold px-4 py-2 rounded-xl transition-all uppercase tracking-widest ${userStats.isPremium ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 ring-1 ring-green-200' : 'bg-indigo-600 text-white shadow-xl shadow-indigo-200/40'}`}
             >
@@ -206,7 +210,7 @@ const App: React.FC = () => {
               <div className="flex flex-col items-center gap-4 text-center">
                 <h3 className="font-bold text-red-800 dark:text-red-400 uppercase tracking-wider">Trial Limit Tercapai</h3>
                 <p className="text-sm text-red-600 dark:text-red-300">Anda telah mencapai batas 2 pencarian gratis harian.</p>
-                <button 
+                <button
                   onClick={() => setIsPricingModalOpen(true)}
                   className="px-8 py-3 bg-red-600 text-white font-bold rounded-xl text-xs uppercase hover:bg-red-700 transition-all shadow-lg"
                 >
@@ -295,7 +299,7 @@ const App: React.FC = () => {
             </form>
           </div>
         ) : (
-          <button 
+          <button
             onClick={() => setIsChatOpen(true)}
             className="w-14 h-14 bg-indigo-600 text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform animate-bounce"
           >
