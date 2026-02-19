@@ -31,7 +31,7 @@ export const searchCitations = async (
 
   const modelName = isDeepResearch ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
   const config: any = {
-    tools: [{ googleSearch: {} }],
+    // tools: [{ googleSearch: {} }],
     responseMimeType: "application/json",
     responseSchema: {
       type: Type.OBJECT,
