@@ -10,6 +10,7 @@ import ReactMarkdown from 'react-markdown';
 const App: React.FC = () => {
   const [query, setQuery] = useState('');
   const [yearFilter, setYearFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all');
   const [isDeepResearch, setIsDeepResearch] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem('theme') === 'dark');
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +53,7 @@ const App: React.FC = () => {
   const isLimitReached = !userStats.isPremium && userStats.searchCount >= TRIAL_LIMIT;
 
   const handleSearch = async (e: React.FormEvent) => {
-    //MASOK
+
     e.preventDefault();
     if (!query.trim()) return;
     if (isLimitReached) {
@@ -64,10 +65,10 @@ const App: React.FC = () => {
     setError(null);
     setResult(null);
     try {
-      const data = await searchCitations(query, yearFilter, isDeepResearch);
+      const data = await searchCitations(query, yearFilter, isDeepResearch, typeFilter);
       setResult(data);
       setUserStats(prev => ({ ...prev, searchCount: prev.searchCount + 1 }));
-      console.log("STARTING SEARCH with params:", { query, yearFilter, isDeepResearch });
+      console.log("STARTING SEARCH with params:", { query, yearFilter, isDeepResearch, typeFilter });
     } catch (err: any) {
       console.error("Search error:", err);
       setError(err.message || 'Terjadi kesalahan riset.');
@@ -196,6 +197,15 @@ const App: React.FC = () => {
                   <option value="all">Semua Tahun</option>
                   <option value="5">5 Th Terakhir</option>
                   <option value="10">10 Th Terakhir</option>
+                </select>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Tipe:</span>
+                <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)} className="bg-transparent border-none text-xs font-bold text-indigo-600 outline-none cursor-pointer">
+                  <option value="all">Semua Tipe</option>
+                  <option value="e-book">E-book</option>
+                  <option value="journal">Journal</option>
+                  <option value="article">Artikel</option>
                 </select>
               </div>
               <label className="flex items-center gap-2 cursor-pointer group">
