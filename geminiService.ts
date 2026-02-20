@@ -7,7 +7,8 @@ const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY || '' }
 export const searchCitations = async (
   query: string, 
   yearFilter: string, 
-  isDeepResearch: boolean
+  isDeepResearch: boolean,
+  typeFilter: string,
 ): Promise<SearchResult> => {
   const currentYear = new Date().getFullYear();
   let yearInstruction = "";
@@ -18,8 +19,19 @@ export const searchCitations = async (
     yearInstruction = `Utamakan referensi 10 tahun terakhir (${currentYear - 10}-${currentYear}).`;
   }
 
+
+  const typeInstruction =
+  typeFilter === "e-book"
+    ? `FOKUS: hanya E-BOOK. Semua citations[].type harus "ebook". Jangan jurnal/artikel.`
+    : typeFilter === "journal"
+      ? `FOKUS: hanya JURNAL ilmiah. Semua citations[].type harus "journal". Jangan buku/ebook.`
+      : typeFilter === "article"
+        ? `FOKUS: hanya ARTIKEL ilmiah (paper/proceedings). Semua citations[].type harus "article". Jangan buku/ebook.`
+        : `FOKUS: campuran. citations[].type boleh "ebook" atau "journal" atau "article".`;
+
   const modelName = isDeepResearch ? 'gemini-2.5-pro' : 'gemini-2.5-flash';
   const config: any = {
+    // tools: [{ googleSearch: {} }],
     responseMimeType: "application/json",
     responseSchema: {
       type: Type.OBJECT,
@@ -39,7 +51,9 @@ export const searchCitations = async (
               page: { type: Type.NUMBER },
               snippet: { type: Type.STRING },
               sourceUrl: { type: Type.STRING },
-              imageUrl: { type: Type.STRING }
+              imageUrl: { type: Type.STRING },
+              type: { type: Type.STRING, description: "ebook | journal | article" },
+
             },
             required: ["id", "title", "authors", "year", "page", "snippet", "sourceUrl"]
           }
@@ -53,7 +67,7 @@ export const searchCitations = async (
 
   const response = await ai.models.generateContent({
     model: modelName,
-    contents: `Cari referensi akademik nyata untuk: "${query}". ${yearInstruction}
+    contents: `Cari referensi akademik nyata untuk: "${query}". ${yearInstruction}. ${typeInstruction}.
     
     TUGAS:
     1. Buat "synthesis" (tinjauan pustaka) yang formal, justify, bergaya akademik (Times New Roman 12pt style).
@@ -67,6 +81,12 @@ export const searchCitations = async (
 
   try {
     const data = JSON.parse(response.text || '{}') as SearchResult;
+    //REVALLIDATE THE UOTPUT SOURCE TYPE 
+    if (typeFilter !== "all") {
+      const expected = typeFilter === "e-book" ? "ebook" : typeFilter; // journal/article
+      const ok = (data.citations || []).every(c => (c as any).type === expected);
+      if (!ok) throw new Error(`Hasil tidak sesuai filter (${typeFilter}). Coba ulangi atau spesifikkan query.`);
+    }
     data.groundingSources = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
     
     data.citations = data.citations.map(c => ({

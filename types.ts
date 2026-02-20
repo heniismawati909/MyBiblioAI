@@ -9,6 +9,7 @@ export interface Citation {
   snippet: string;
   sourceUrl: string;
   imageUrl?: string;
+  type?: string; 
 }
 
 export interface SearchResult {

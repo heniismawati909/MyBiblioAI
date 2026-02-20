@@ -22,13 +22,18 @@ export const CitationCard: React.FC<CitationCardProps> = ({ citation }) => {
       </div>
 
       <div className="p-5 flex-grow">
-        <div className="flex justify-between items-start gap-2 mb-2">
+        <div className="flex justify-between items-center gap-2 mb-2">
           <div className="flex-shrink-0 w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-[10px]">
             {citation.id}
           </div>
-          <span className="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full border border-indigo-100 dark:border-indigo-800 uppercase tracking-tighter">
-            Halaman {citation.page}
-          </span>
+          <div className='flex flex-row gap-2 p-2 align-middle items-center justify-center border border-white/20 rounded-3xl bg-white/10'>
+            <span className="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 dark:bg-white-900/30 text-indigo-800 dark:text-indigo-400 rounded-full border border-indigo-100 dark:border-indigo-800 uppercase tracking-tighter ">
+              {citation.type}
+            </span>
+            <span className="text-[10px] font-bold px-2 py-0.5 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full border border-indigo-100 dark:border-indigo-800 uppercase tracking-tighter">
+              Halaman {citation.page}
+            </span>
+          </div>
         </div>
 
         <h4 className="font-bold text-slate-900 dark:text-slate-100 text-base leading-tight mb-1">
