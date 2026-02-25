@@ -49,7 +49,7 @@ const App: React.FC = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
-  const TRIAL_LIMIT = 2;
+  const TRIAL_LIMIT = 10;
   const isLimitReached = !userStats.isPremium && userStats.searchCount >= TRIAL_LIMIT;
 
   const handleSearch = async (e: React.FormEvent) => {
@@ -68,9 +68,7 @@ const App: React.FC = () => {
       const data = await searchCitations(query, yearFilter, isDeepResearch, typeFilter);
       setResult(data);
       setUserStats(prev => ({ ...prev, searchCount: prev.searchCount + 1 }));
-      console.log("STARTING SEARCH with params:", { query, yearFilter, isDeepResearch, typeFilter });
     } catch (err: any) {
-      console.error("Search error:", err);
       setError(err.message || 'Terjadi kesalahan riset.');
     } finally {
       setIsLoading(false);
@@ -78,7 +76,6 @@ const App: React.FC = () => {
   };
 
   const handleChatSend = async (e: React.FormEvent) => {
-    console.log('handleChatSend called');
     e.preventDefault();
     if (!chatInput.trim()) return;
 
